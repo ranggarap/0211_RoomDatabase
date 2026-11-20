@@ -24,10 +24,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.roomdatabase.R
-import com.example.roomdatabase.uicontroller.DestinasiNavigasi
+import com.example.roomdatabase.view.route.DestinasiEntry
 import com.example.roomdatabase.viewmodel.DetailSiswa
 import com.example.roomdatabase.viewmodel.EntryViewModel
-import com.example.roomdatabase.viewmodel.PenyediaViewModel
+import com.example.roomdatabase.viewmodel.provider.PenyediaViewModel
 import com.example.roomdatabase.viewmodel.UIStateSiswa
 import kotlinx.coroutines.launch
 
@@ -46,11 +46,12 @@ fun EntrySiswaScreen(
             SiswaTopAppBar(
                 title = stringResource(DestinasiEntry.titleRes),
                 canNavigateBack = true,
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                navigateUp = navigateBack
             )
         }
     ) { innerPadding ->
-        EntryBody(
+        EntrySiswaBody(
             uiStateSiswa = viewModel.uiStateSiswa,
             onSiswaValueChange = viewModel::updateUiState,
             onSaveClick = {
@@ -68,7 +69,7 @@ fun EntrySiswaScreen(
 }
 
 @Composable
-fun EntryBody(
+fun EntrySiswaBody(
     uiStateSiswa: UIStateSiswa,
     onSiswaValueChange: (DetailSiswa) -> Unit,
     onSaveClick: () -> Unit,
@@ -142,10 +143,4 @@ fun FormInputSiswa(
             modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_medium))
         )
     }
-}
-
-// INI YANG MEMBUAT PETA NAVIGASI BISA MENDETEKSI DESTINASIENTRY
-object DestinasiEntry : DestinasiNavigasi {
-    override val route = "item_entry"
-    override val titleRes = R.string.entry_siswa
 }
