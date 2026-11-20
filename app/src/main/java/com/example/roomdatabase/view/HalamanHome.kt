@@ -1,5 +1,6 @@
 package com.example.roomdatabase.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,14 +35,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.roomdatabase.R
 import com.example.roomdatabase.room.Siswa
-import com.example.roomdatabase.uicontroller.DestinasiNavigasi
+import com.example.roomdatabase.view.route.DestinasiHome
 import com.example.roomdatabase.viewmodel.HomeViewModel
-import com.example.roomdatabase.viewmodel.PenyediaViewModel
+import com.example.roomdatabase.viewmodel.provider.PenyediaViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navigateToItemEntry: () -> Unit,
+    onSiswaClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
@@ -72,6 +74,7 @@ fun HomeScreen(
         val uiStateSiswa by viewModel.homeUiState.collectAsState()
         BodyHome(
             itemSiswa = uiStateSiswa.listSiswa,
+            onSiswaClick = onSiswaClick,
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
@@ -82,6 +85,7 @@ fun HomeScreen(
 @Composable
 fun BodyHome(
     itemSiswa: List<Siswa>,
+    onSiswaClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -97,6 +101,7 @@ fun BodyHome(
         } else {
             ListSiswa(
                 itemSiswa = itemSiswa,
+                onSiswaClick = { onSiswaClick(it) },
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             )
         }
@@ -106,6 +111,7 @@ fun BodyHome(
 @Composable
 fun ListSiswa(
     itemSiswa: List<Siswa>,
+    onSiswaClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
@@ -114,6 +120,7 @@ fun ListSiswa(
                 siswa = person,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
+                    .clickable { onSiswaClick(person.id) }
             )
         }
     }
@@ -155,10 +162,4 @@ fun DataSiswa(
             )
         }
     }
-}
-
-// INI YANG MEMBUAT PETA NAVIGASI BISA MENDETEKSI DESTINASIHOME
-object DestinasiHome : DestinasiNavigasi {
-    override val route = "home"
-    override val titleRes = R.string.app_name
 }
